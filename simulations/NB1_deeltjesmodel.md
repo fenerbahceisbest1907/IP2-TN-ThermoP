@@ -34,7 +34,7 @@ We nemen als voorbeeld twee fietsers, waarbij de fietser 1 een eenparige bewegin
 ```python
 import numpy as np # comment
 import matplotlib.pyplot as plt
-print('Ik hou van Fenerbahce')
+print('Ik hou van Fenerbahce') #aanpassing2
 print('Arth')
 # Beginwaarden
 dt = 0.35                #s
