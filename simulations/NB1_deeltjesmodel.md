@@ -55,7 +55,10 @@ for i in range(0,N-1):
     x_1[i+1] = x_1[i] + v_1*dt
     
     x_2[i+1] = x_2[i] + v_2[i]*dt
-    v_2[i+1] = v_2[i] + a_2*dt
+    v_2[i+1] = v_2[i] + a_2*dt  
+
+
+
 
 # Plotten van de gegevens.    
 plt.figure()
