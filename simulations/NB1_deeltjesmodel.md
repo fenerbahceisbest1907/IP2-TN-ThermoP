@@ -34,9 +34,10 @@ We nemen als voorbeeld twee fietsers, waarbij de fietser 1 een eenparige bewegin
 ```python
 import numpy as np # comment
 import matplotlib.pyplot as plt
-
+print('Ik hou van Fenerbahce')
+print('Arth')
 # Beginwaarden
-dt = 0.25                  #s
+dt = 0.35                #s
 t_e = 10                   #s
 N = int(t_e/dt)+1
 t = np.arange(0,t_e+dt,dt) #s
@@ -55,10 +56,7 @@ for i in range(0,N-1):
     x_1[i+1] = x_1[i] + v_1*dt
     
     x_2[i+1] = x_2[i] + v_2[i]*dt
-    v_2[i+1] = v_2[i] + a_2*dt  
-
-
-
+    v_2[i+1] = v_2[i] + a_2*dt
 
 # Plotten van de gegevens.    
 plt.figure()
