@@ -34,10 +34,9 @@ We nemen als voorbeeld twee fietsers, waarbij de fietser 1 een eenparige bewegin
 ```python
 import numpy as np # comment
 import matplotlib.pyplot as plt
-print('Ik hou van Fenerbahce') #aanpassing2
-print('Arth')
+
 # Beginwaarden
-dt = 0.35                #s
+dt = 0.25                #s
 t_e = 10                   #s
 N = int(t_e/dt)+1
 t = np.arange(0,t_e+dt,dt) #s
@@ -82,7 +81,50 @@ Maak het tijdsinterval $dt$ groter en vergelijk de afgelegde weg in de tien seco
 <!-- Jouw antwoord hier  -->
 
 ```python
-%reset -f  #clears memory as we don't need it further down 
+import numpy as np # comment
+import matplotlib.pyplot as plt
+
+# Beginwaarden
+dt = 0.01               #s
+t_e = 10                   #s
+N = int(t_e/dt)+1
+t = np.arange(0,t_e+dt,dt) #s
+
+# fietser 1
+x_1 = np.zeros(N)          #m     maakt array van lengte N met alleen maar waarde 0.
+v_1 = 5                    #m/s
+
+# fietser 2
+x_2 = np.zeros(N)          #m     
+v_2 = np.zeros(N)          #m/s     
+a_2 = .5                   #m/s^2     
+
+# Uitvoeren van de simulatie
+for i in range(0,N-1):
+    x_1[i+1] = x_1[i] + v_1*dt
+    
+    x_2[i+1] = x_2[i] + v_2[i]*dt
+    v_2[i+1] = v_2[i] + a_2*dt
+
+# Plotten van de gegevens.    
+plt.figure()
+
+plt.xlabel('$t$(s)')
+plt.ylabel('$x$(m)')
+
+plt.plot(t,x_1,'r.', markersize=1, label='fietser 1')
+plt.plot(t,x_2,'b.', markersize=1, label='fietser 2')
+
+plt.show()
+
+
+```
+
+```python
+%reset -f  
+
+
+
 ```
 
 ## Naar een deeltjesmodel
@@ -98,7 +140,8 @@ Een *class* is een blauwdruk voor het creëren van objecten (zoals deeltjes, ato
 # Merk op dat de class zelf geen deeltje is! 
 # Een object dat tot een bepaalde class behoort, wordt een instant van die class genoemd. 
 # Je kunt meerdere instants van een class hebben.
-
+import numpy as np # comment
+import matplotlib.pyplot as plt
 class ParticleClass:
     def __init__(self, m, v, r, R):
         self.m = m                         # massa van het deeltje
@@ -134,7 +177,7 @@ print(this_particle)
 Nu we een object hebben, laten we eens kijken of we de eigenschappen van het object kunnen opvragen:
 
 ```python
-print("Massa van het deeltje " + str(this_particle.m) + " kg")
+print("Massa van het deeltje " , str(this_particle.m) , " kg")
 print("Huidige positie is " + str(this_particle.r))
 
 # oproepen van de functie 'update_position' met dt = 1.0 seconde
@@ -171,7 +214,7 @@ for start_x in range(4):
 
 print("Hoe het array eruit ziet volgens python: " + str(particle_array))
 print("Hoe een element van het array eruit ziet volgens python: " + str(particle_array[0]))
-print("Hoe een eigenschap (in dit geval: 'r') van het element van het array eruit ziet volgens python: " + str(particle_array[0].r))
+print("Hoe een eigenschap (in dit geval: 'r') van het element van het array eruit ziet volgens python: " + str(particle_array[1].r))
 ```
 
 ```{exercise} Voorspel
