@@ -225,6 +225,8 @@ Voorspel en controleer vervolgens met onderstaande code.
 ```
 
 ```python
+#gok: de deeltjes liggen op (0,0), (1,0), (2,0),(3,0)
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -274,6 +276,33 @@ En als je wilt gaan voor een uitdaging:
 
 ```python
 ### YOUR CODE HERE ###
+particle_array2 = []
+snelheden = np.random.randint(-5,5,10)
+positie=np.random.randint(0,10,10)
+for i in positie:
+    particle_array2.append(ParticleClass(m=1.0, v=[0, snelheden[i]], r=[i, 0.0],R=1.0))
+
+plt.figure()
+for particle in particle_array2:
+    plt.plot(particle.r[0],particle.r[1],'r.')
+    
+for particle, particle_object in enumerate(particle_array2):
+    print("Deeltje " + str(particle) + ", huidige positie: " + str(particle_object.r))
+    print("oproepen van de functie 'update_position' met dt = 1.0 second ")
+    particle_object.update_position(200.0)
+    print("snelheid ", str(particle_object.v))
+    print("Volgende positie " + str(particle_object.r))
+    if particle < len(particle_array2) - 1:
+        print("Naar het volgende deeltje \n")
+    
+
+
+
+for particle in particle_array2:
+    plt.plot(particle.r[0],particle.r[1],'k.')
+
+plt.show()
+
 ```
 
 Onze simulaties worden snel “zwaar”. Er moeten veel berekeningen gedaan worden en dat kost nu eenmaal tijd. Nu is het wel zo dat sommige berekeningen meer tijd kosten dan anderen. Om te kijken of een stukje code geoptimaliseerd kan worden, moeten we een timer maken. Dat kan met onderstaande code:
@@ -293,7 +322,7 @@ for i in range(N):
 eind = time.time()
 lengte = eind - start
 
-print("Dit kostte ", lengte, "seconde!")
+print("Dit kostte ", lengte, "seconde!") #ongeveer 8.5 s
 ```
 
 Idealiter draaien we de bovenstaande code een aantal keer zodat we een goede schatting hebben van de rekentijd.
@@ -316,7 +345,13 @@ De runtime is {eval}`<naam variabele>` korter.
 ```
 
 ```python
+start=time.time()
+Array=np.array([])
+Array=np.append(Array,np.random.randint(1E5))
+eind=time.time()
 
+lengte=eind-start
+print("Dit kostte", lengte, "seconde!")
 ```
 
 ## Aan de slag met deeltjes
@@ -380,15 +415,15 @@ We willen de beweging van dat deeltje straks bestuderen en moeten dus een plot m
 ```python
 # Creeer een figuur en de assen
 fig, ax = plt.subplots()
-ax.set_xlim(-10, 10)
-ax.set_ylim(-10, 10)
+ax.set_xlim(-2000, 2000)
+ax.set_ylim(-2000, 2000)
 ax.set_aspect('equal')
 ax.set_title("Animatie")
 ax.set_xlabel("x")
 ax.set_ylabel("y")
 
 # Toon het deeltje als een rode stip
-dot, = ax.plot([], [], 'ro', markersize=10); # semicolon to suppress output
+dot, = ax.plot(particle.r[0], particle.r[1], 'ro', markersize=10); # semicolon to suppress output
 ```
 
 Bij het aanmaken van ons deeltje hebben we het deeltje een beginpositie en snelheid mee gegeven.
@@ -473,41 +508,13 @@ Controleer je eigen antwoord door de functie hierboven even te vervangen door de
 
 ```python tags=["NB1_doorlopendedoos"]
 # doorlopende doos
-def update(frame):
-    particle.update_position()
-    dot.set_data([particle.r[0]], [particle.r[1]])
+
 ### YOUR CODE HERE ###
-    return dot,         
-```
 
-```{exercise} Harde wanden
-:label: ex-deeltjesmodel-3
-Een tweede optie is dat we een doos hebben met harde wanden. Op het moment dat het deeltje de wand raakt, wordt deze gereflecteerd. Schrijf hieronder de code zodat het deeltje in zijn doos blijft, waarbij de doos harde wanden heeft.
-
-Test wederom je code door de vernieuwde functie hierboven te plakken.
-```
-
-```python tags=["NB1_hardewand"]
-# harde wanden
-def update(frame):
-    particle.update_position()
-    dot.set_data([particle.r[0]], [particle.r[1]])
-### YOUR CODE HERE ###
-    return dot,
-```
-
-```{exercise}
-:label: ex-deeltjesmodel-4
-
-Verander nu de code zodanig dat de beginsnelheid gegeven wordt door $\vec{v}=5\hat{x} + 3\hat{y}$ en het deeltje botst tegen alle muren.
-```
-
-```python
 # Simulation parameters
 dt = 0.1         # time step
 num_steps = 500  # number of time steps
-
-### YOUR CODE HERE ###
+particle = ParticleClass(m=1.0, v=[5.0, 0], r=[0.0, 0.0],R=1.0)  
 
 # Create the figure and axis
 fig, ax = plt.subplots()
@@ -519,7 +526,7 @@ ax.set_xlabel("x")
 ax.set_ylabel("y")
 
 # Create the particle as a red dot
-dot, = ax.plot([], [], 'ro', markersize=10);
+dot, = ax.plot([], [], 'ro', markersize=10)
 
 # Initialization function for animation
 def init():
@@ -530,15 +537,126 @@ def init():
 def update(frame):
     particle.update_position()
     dot.set_data([particle.r[0]], [particle.r[1]])
-    ### YOUR CODE HERE ###
+    if particle.r[0] >= 10.0:
+        particle.r[0] = -10.0
     return dot,
-
 # Create animation
 ani = FuncAnimation(fig, update, frames=range(200), init_func=init, blit=True, interval=50)
 
 # For Jupyter notebook:
 from IPython.display import HTML
 HTML(ani.to_jshtml())
+
+
+```
+
+```{exercise} Harde wanden
+:label: ex-deeltjesmodel-3
+Een tweede optie is dat we een doos hebben met harde wanden. Op het moment dat het deeltje de wand raakt, wordt deze gereflecteerd. Schrijf hieronder de code zodat het deeltje in zijn doos blijft, waarbij de doos harde wanden heeft.
+
+Test wederom je code door de vernieuwde functie hierboven te plakken.
+```
+
+```python tags=["NB1_hardewand"]
+
+
+    # doorlopende doos
+
+### YOUR CODE HERE ###
+
+# Simulation parameters
+dt = 0.1         # time step
+num_steps = 500  # number of time steps
+particle = ParticleClass(m=1.0, v=[5.0, 0], r=[0.0, 0.0],R=1.0)  
+
+# Create the figure and axis
+fig, ax = plt.subplots()
+ax.set_xlim(-10, 10)
+ax.set_ylim(-10, 10)
+ax.set_aspect('equal')
+ax.set_title("Particle Animation")
+ax.set_xlabel("x")
+ax.set_ylabel("y")
+
+# Create the particle as a red dot
+dot, = ax.plot([], [], 'ro', markersize=10)
+
+# Initialization function for animation
+def init():
+    dot.set_data([], [])
+    return dot,
+
+# Update function for each frame
+def update(frame):
+    particle.update_position()
+    dot.set_data([particle.r[0]], [particle.r[1]])
+    if particle.r[0] >= 10.0:
+        particle.v[0] = -5.0
+    elif particle.r[0] <= -10.0:
+        particle.v[0] = 5.0
+    return dot,
+# Create animation
+ani = FuncAnimation(fig, update, frames=range(200), init_func=init, blit=True, interval=50)
+
+# For Jupyter notebook:
+from IPython.display import HTML
+HTML(ani.to_jshtml())
+
+
+```
+
+```{exercise}
+:label: ex-deeltjesmodel-4
+
+Verander nu de code zodanig dat de beginsnelheid gegeven wordt door $\vec{v}=5\hat{x} + 3\hat{y}$ en het deeltje botst tegen alle muren.
+```
+
+```python
+
+### YOUR CODE HERE ###
+
+# Simulation parameters
+dt = 0.1         # time step
+num_steps = 500  # number of time steps
+particle = ParticleClass(m=1.0, v=[5.0, 3.0], r=[0.0, 0.0],R=1.0)  
+
+# Create the figure and axis
+fig, ax = plt.subplots()
+ax.set_xlim(-10, 10)
+ax.set_ylim(-10, 10)
+ax.set_aspect('equal')
+ax.set_title("Particle Animation")
+ax.set_xlabel("x")
+ax.set_ylabel("y")
+
+# Create the particle as a red dot
+dot, = ax.plot([], [], 'ro', markersize=10)
+
+# Initialization function for animation
+def init():
+    dot.set_data([], [])
+    return dot,
+
+# Update function for each frame
+def update(frame):
+    particle.update_position()
+    dot.set_data([particle.r[0]], [particle.r[1]])
+    if particle.r[0] >= 10.0:
+        particle.v[0] = -5.0
+    elif particle.r[0] <= -10.0:
+        particle.v[0] = 5.0
+    if particle.r[1] >= 10.0:
+        particle.v[1] = -5.0
+    elif particle.r[1] <= -10.0:
+        particle.v[1] = 5.0
+    return dot,
+# Create animation
+ani = FuncAnimation(fig, update, frames=range(200), init_func=init, blit=True, interval=50)
+
+# For Jupyter notebook:
+from IPython.display import HTML
+HTML(ani.to_jshtml())
+
 ```
 
 Laten we teruggaan naar ons deeltje. Er is een functie om de positie bij te werken, hoewel de snelheid hetzelfde lijkt te blijven... kunnen we de snelheid veranderen door (bijvoorbeeld) de versnelling door de zwaartekracht?
