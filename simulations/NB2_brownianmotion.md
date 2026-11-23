@@ -87,6 +87,28 @@ Bekijk de waarde van `DT`. Hoe zorgt deze waaarde ervoor dat het onwaarschijnlij
 
 Onze simulatie modelleert dus een klein systeem zonder rekening te houden met de kracht tussen de luchtmoleculen. Je zult zien dat we toch al behoorlijk wat van de processor vragen om deze berekeningen te doen. Om een meer realistische modelsimulatie te maken is daarom een serieuze uitdaging, die veel wiskunde en programmeerervaring vraagt. Op dit ogenblik wordt dit bijvoorbeeld gevraagd bij een van de eerste opdrachten van het vak 'Computational Physics' van de master Applied Physics. 
 
+```python
+#E1 
+rib_kubus=16E-9
+volume_mol=rib_kubus**3
+print(volume_mol)
+```
+
+```python
+#E2
+def Velocity(T,m):
+    return np.sqrt(2*1.380649E-23*(T+273.15)/m)
+Velocity(25,1.65E-13)
+```
+
+```python
+#E3
+```
+
+```python
+#E4  Een zo klein mogelijke DT zorgt ervoor dat de computer meer momenten heeft om te controleren of er een botsing is. Dit zorgt ervoor dat bij zeer veel botsingen achter elkaar de computer dit kan modelleren
+```
+
 ```python tags=["NB2_init"] editable=true slideshow={"slide_type": ""}
 BOX_SIZE_0 = 10                # Hoogte en lengte startvolume
 N = 40                         # Aantal deeltjes
@@ -123,7 +145,7 @@ class ParticleClass:
     @property
     def kin_energy(self):
         return 1/2 * self.m * np.dot(self.v, self.v)
-    
+global kin_energy
 def collide_detection(p1: ParticleClass, p2: ParticleClass) -> bool:
     """ Geeft TRUE als de deeltjes overlappen """
     dx = p1.r[0]-p2.r[0]
@@ -164,7 +186,7 @@ def box_collision(particle: ParticleClass):
         if particle.r[i] > BOX_SIZE_0 / 2:
             particle.r[i] -= BOX_SIZE_0 
         elif particle.r[i] < -BOX_SIZE_0 / 2:
-            particle.r[i] += BOX_SIZE_0
+            particle.r[i] += BOX_SIZE_0 
 ```
 
 ### Maken van de simulatie
@@ -184,7 +206,7 @@ Leg uit dat d.m.v. onderstaande code de deeltjes allemaal dezelfde snelheid hebb
 
 ```{solution} ex-recap-5
 Jouw antwoord hier...
-### YOUR CODE HERE ###
+De deeltjes hebben dezelfde beginsnelheid omdat een np.random.uniform functie is gebruikt met keuze tussen + of -. Dit betekent dat al de deeltjes de zelfde snelheid hebben alleen in een andere directie. De functie wordt ook gebruikt bij de posities dus die zijn ook uniform verdeeld.
 ```
 
 ```python tags=["NB2_init"] editable=true slideshow={"slide_type": ""}
@@ -209,8 +231,8 @@ Leg uit hoe er in onderstaande code wordt voorkomen dat de botsing tussen twee d
 ```
 
 ```{solution} ex-recap-6
-Jouw antwoord hier...
-### YOUR CODE HERE ###
+
+If one collision is detected by the collide_detection, then this particle is erased from collide_detection.
 ```
 
 ```python editable=true slideshow={"slide_type": ""} tags=["NB2_init"]
@@ -317,7 +339,17 @@ particles = []
 energy_tot = []
 create_particles(particles)
 for i in range(100):
-    take_time_step(particles)
+    E = 0
+    for j in range(N):
+        take_time_step(particles)
+        E += particles[j].kin_energy
+
+    energy_tot.append(E)
+    
+time=np.linspace(0,100,100)
+
+
+plt.plot(time,energy_tot,"g.")
     # voeg de som van de kinetische energie in deze stap toe aan energy_tot 
     ### YOUR CODE HERE ###
 
@@ -331,9 +363,7 @@ Als je heel nauwkeurig naar de waarde voor de totale kinetische energie kijkt, d
 ```
 
 ```{solution} ex-recap-8
-Jouw antwoord hier...
-### YOUR CODE HERE ###
-```
+
 
 
 Voor simulaties waarbij de kans op botsingen heel groot is (richting vloeistof), is er een handige methode om de snelheid van je simulatie op te voeren.
